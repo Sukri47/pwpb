@@ -1,4 +1,4 @@
-//daftar.php (controller)
+//daftar.php (controller) paste sebelum } terakhir
 public function hapus_buku($id_buku) {
     // Panggil model yang sesuai untuk mengakses database
     $this->load->model('daftar_model');
@@ -12,7 +12,7 @@ public function hapus_buku($id_buku) {
     }
 }
 
-//daftar_model.php (models)
+//daftar_model.php (models) paste sebelum } terakhir
 public function hapus_data($id_buku) {
         // Lakukan penghapusan data dari tabel yang sesuai
         $this->db->where('id_buku', $id_buku);
@@ -23,5 +23,5 @@ public function hapus_data($id_buku) {
     }
 }
 
-//daftar.php (view)
+//daftar.php (view) hapus tombol hapus dan paste
 <a href="<?php echo site_url('daftar/hapus_buku/'.$itembuku->id_buku) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');"><i class="fa fa-trash"></i> Hapus</a>
