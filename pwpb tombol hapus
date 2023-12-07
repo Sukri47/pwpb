@@ -1,0 +1,27 @@
+//daftar.php (controller)
+public function hapus_buku($id_buku) {
+    // Panggil model yang sesuai untuk mengakses database
+    $this->load->model('daftar_model');
+
+    $result = $this->daftar_model->hapus_data($id_buku);
+
+    if ($result) {
+        redirect('daftar/index'); 
+    } else {
+        echo "Gagal menghapus data.";
+    }
+}
+
+//daftar_model.php (models)
+public function hapus_data($id_buku) {
+        // Lakukan penghapusan data dari tabel yang sesuai
+        $this->db->where('id_buku', $id_buku);
+        $this->db->delete('tabel_buku'); // Ganti 'nama_tabel_buku' dengan nama tabel Anda
+
+        // Mengembalikan TRUE jika penghapusan berhasil, FALSE jika gagal
+        return $this->db->affected_rows() > 0 ? true : false;
+    }
+}
+
+//daftar.php (view)
+<a href="<?php echo site_url('daftar/hapus_buku/'.$itembuku->id_buku) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');"><i class="fa fa-trash"></i> Hapus</a>
