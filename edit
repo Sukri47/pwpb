@@ -1,0 +1,242 @@
+//views
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Buku</title>
+	<style>
+    .parsley-errors-list {
+    list-style-type: none;
+    padding-left: 0;
+    /* padding-bottom: 5px;
+    margin-top: -15px;
+    margin-bottom: 0; */
+    font-weight: 400;
+    font-size: 11px;
+}
+.parsley-errors-list.filled {
+    color: #d43f3a;
+    opacity: 1;
+}
+</style>
+</head>
+<body>
+<div class="content">
+	<!-- start page header -->
+	<div class="page-header">
+		<h1 class="title">Edit Buku</h1>
+		<ol class="breadcrumb">
+			<li><a href="<?php echo site_url('') ?>">Dashboard</a></li>
+			<li><a href="<?php echo site_url('daftar/index') ?>">Daftar Buku</a></li>
+			<li class="active">Edit</li>
+		</ol>
+
+		<!-- start page header right -->
+		<div class="right">
+			<div class="btn-group" role="group" aria-label="...">
+				<a
+					href="<?php echo site_url('daftar') ?>"
+					class="btn btn-basic btn-rounded"
+					><i class="fa fa-plus"></i> Batal</a
+				>
+			</div>
+		</div>
+		<!-- end page header right -->
+	</div>
+	<!-- end page header -->
+	<div class="container-default">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-title">
+                        <?php if($this->session->flashdata('success')): ?>
+                            <div class="kode-alert alert1">
+                                <a href="#" class="closed">&times;</a>
+                                <?php echo $this->session->flashdata('success'); ?>
+                            </div>
+                        <?php endif ?>
+                    </div>
+					<div class="panel-body">
+						<form
+                        action="" 
+						id="addbuku"
+                        method="post"
+                        enctype="multipart/form-data"
+						data-parsley-validate
+						>
+						<input type="hidden" name="id_buku" value="<?php echo $tabel_buku->id_buku?>">
+							<div class="form-group">
+								<label for="example3" class="form-label">Judul Buku</label
+								><input
+									type="text"
+									class="form-control form-control-line <?php echo form_error('judul_buku') ? 'is-invalid': '' ?>"
+									name="judul_buku"
+									placeholder="Judul Buku"
+                                    value="<?php echo $tabel_buku->judul_buku; ?>"
+									required
+								/>
+								<div class="invalid-feedback">
+                                <?php echo form_error('judul_buku')?>
+                                </div>
+							</div>							
+
+							<div class="form-group">
+                                <label for="example5" class="form-label">Penerbit Buku</label>
+                                <textarea
+                                    class="form-control form-control-line"
+                                    name="penerbit_buku"
+                                    placeholder="Penerbit Buku"
+                                ><?php echo $tabel_buku->penerbit_buku; ?></textarea>
+                                <div class="invalid-feedback has-error">
+                                    <?php echo form_error('penerbit_buku') ?>
+                                </div>
+                            </div>
+							<div class="form-group">
+								<label for="example4" class="form-label">Katergori Buku</label
+								><input
+									type="text"
+									class="form-control form-control-line <?php echo form_error('kategori_buku') ? 'is-invalid': '' ?>"
+									name="kategori_buku"
+									placeholder="Kategori Buku"
+                                    value="<?php echo $tabel_buku->kategori_buku; ?>"
+									required
+								/>
+								<div class="invalid-feedback has-error">
+                                <?php echo form_error('kategori_buku')?>
+                                </div>
+							</div>
+							<div class="form-group">
+								<label for="example4" class="form-label">Tanggal Terbit</label
+								><input
+									type="date"
+									class="form-control form-control-line <?php echo form_error('tanggal_terbit') ? 'is-invalid': '' ?>"
+									name="tanggal_terbit"
+									placeholder="Tanggal Terbit"
+                                    value="<?php echo $tabel_buku->tanggal_terbit; ?>"
+									required
+								/>
+								<div class="invalid-feedback has-error">
+                                <?php echo form_error('tanggal_terbit')?>
+                                </div>
+							</div>
+							<div class="form-group">
+                                <label for="example6" class="form-label">Sampul Buku</label>
+                                <?php if (!empty($tabel_buku->sampul_buku)) : ?>
+                                    <img src="<?php echo base_url('assets/uploads/'. $tabel_buku -> sampul_buku) ?>" alt="" width="128px" >
+                                <?php else : ?>
+                                    <span>Gambar Sampul Buku Tidak Tersedia</span>
+                                <?php endif; ?>
+                                <input type="hidden" class="form-control" name="sampul_buku" value="<?php echo $tabel_buku->sampul_buku; ?>">
+                                <div class="invalid-feedback has-error">
+                                    <?php echo form_error('sampul_buku') ?>
+                                </div>
+                            </div>
+							<div class="form-group">
+								<input type="file" class="form-control form-control-line" name="sampul_buku" value="<?php echo $tabel_buku->sampul_buku ?>">
+							</div>
+
+							<button type="submit" class="btn btn-default">Simpan</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#addbuku").parsley();
+	});
+</script>
+</body>
+</html>
+
+//controrell
+
+ public function edit($id_buku){
+     if(!isset($id_buku))
+     redirect('daftar');
+ 
+     $daftar = $this->daftar_model;
+     $validation = $this->form_validation;
+     $validation->set_rules($daftar->rules());
+ 
+     if ($validation->run()) {
+         $daftar->update(); // Mengirimkan $id_buku ke dalam fungsi ubah() untuk melakukan update
+         $this->session->set_flashdata('success', 'Berhasil Disimpan'); // Menyimpan pesan sukses dalam flashdata
+     }
+ 
+     $data["tabel_buku"] = $daftar->getById($id_buku);
+ 
+     if (!$data["tabel_buku"]) {
+         show_404();
+     }
+ 
+     $this->load->view('header');
+     $this->load->view('sidebar');
+     $this->load->view('edit', $data);
+     $this->load->view('footer');
+ }
+
+//model
+
+public function getCoverFilename($id_buku) {
+        // Assuming you have a table 'books' with a column 'sampul_buku'
+        // Modify the query accordingly based on your actual database structure
+        $this->db->select('sampul_buku');
+        $this->db->where('id_buku', $id_buku);
+        $query = $this->db->get('tabel_buku');
+
+        if ($query->num_rows() > 0) {
+            $row = $query->row();
+            return $row->sampul_buku;
+        } else {
+            return null; // or handle appropriately if book with given ID is not found
+        }
+    }
+
+    public function update()
+{
+    $post = $this->input->post(NULL, TRUE);
+    $this->id_buku = $post["id_buku"];
+    $this->judul_buku = $post["judul_buku"];
+    $this->penerbit_buku = $post["penerbit_buku"];
+    $this->kategori_buku = $post["kategori_buku"];
+    $this->tanggal_terbit = $post["tanggal_terbit"];
+
+
+    $old_cover_filename = $this->daftar_model->getCoverFilename($post["id_buku"]); // Replace 'Your_model_name' with your actual model name and method
+    // Check if there is a new file uploaded
+    if (!empty($_FILES['sampul_buku']['name'])) {
+        $config['upload_path'] = './assets/uploads/';
+        $config['allowed_types'] = 'gif|jpg|jpeg|png';
+        $config['file_name'] = "buku_" . date("YmdHis");
+        $config['max_size'] = 1024;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('sampul_buku')) {
+            $uploadData = $this->upload->data();
+            $this->sampul_buku = $uploadData['file_name'];
+
+            // Delete old cover if needed or move it to an archive
+            // For example:
+            // unlink('./assets/uploads/' . $old_cover_filename); // Delete old cover
+        } else {
+            // Handle upload failure (if needed)
+            $uploadError = $this->upload->display_errors();
+            // You might want to handle or log the error
+        }
+    } else {
+        // No new file uploaded, keep the old cover
+        // Assuming $old_cover_filename contains the old cover's file name
+        // If you have it stored in your database or somewhere else, retrieve it accordingly
+        $this->sampul_buku = $old_cover_filename;
+    }
+
+    // Update the database based on the specific ID
+    return $this->db->update($this->_table, $this, array('id_buku' => $post['id_buku']));
+}
